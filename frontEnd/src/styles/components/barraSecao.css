@@ -1,0 +1,29 @@
+.barra-secao {
+    margin: 5% 20% 0%;
+
+    display: flex;
+    justify-content: flex-start;
+    gap: 1.5em;
+    flex-wrap: nowrap;
+
+    color: #7f8184;
+    font-size: 1.25em;
+    border-bottom: 1px solid #7f8184;
+}
+
+.barra-secao span {
+    cursor: pointer;
+}
+
+.selecionado {
+    color: purple;
+    font-weight: bold;
+
+    border-bottom: 3px solid purple;
+}
+
+@media screen and (max-width: 425px) {
+    .barra-secao {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,41 @@
+h2 {
+    color: purple;
+    font-weight: bold;
+}
+
+.list-group {
+    margin: 3% 3%;
+    width: 80%;
+}
+
+.list-group li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border: 1px solid purple;
+
+    font-size: 1.25em;
+}
+
+.list-group li:hover {
+    background-color: rgba(128, 0, 128, 0.681);
+    color: rgb(255, 189, 68);
+    font-weight: bold;
+    transition: 300ms;
+}
+
+.title-register {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 1em;
+}
+
+@media screen and (max-width: 990px) {
+    .list-group {
+        width: 95%;
+        margin-top: 10%;
+    }
+}

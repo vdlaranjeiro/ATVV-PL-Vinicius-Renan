@@ -1,0 +1,32 @@
+.logo {
+    font-size: 2em;
+    font-weight: bold;
+    color: rgb(255, 189, 68);
+
+    cursor: pointer;
+}
+
+ul {
+    font-size: 1.25em;
+    font-weight: bold;
+}
+
+ul a:visited, ul a:link, ul a:hover, ul a:active {
+    color: white;
+}
+
+button {
+    border-color: white;
+}
+
+.back-button {
+    font-weight: bold;
+    background-color: purple;
+    border: 2px solid white;
+}
+
+.back-button:hover {
+    font-weight: bold;
+    background-color: orange;
+    border: 2px solid orange;
+}

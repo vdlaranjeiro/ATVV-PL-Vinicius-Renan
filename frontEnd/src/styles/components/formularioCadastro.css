@@ -1,0 +1,79 @@
+form {
+    margin: 5% 20%;
+    padding: 4%;
+    border: 0.1em solid purple;
+    border-radius: 20px;
+}
+
+form select {
+    margin-bottom: 1em;
+}
+
+.add-input-button {
+    height: 58px;
+
+    border: 2px solid orange;
+    color: orange;
+
+    font-weight: bold;
+}
+.add-input-button:hover {
+    border: 2px solid orange;
+    color: white;
+    background-color: orange;
+
+}
+
+.remove-input-button {
+    height: 58px;
+    width: 40px;
+    margin-right: 1.5px;
+
+    border: 2px solid purple;
+    color: purple;
+
+    font-weight: bold;
+}
+.remove-input-button:hover {
+    border: 2px solid purple;
+    color: white;
+    background-color: purple;
+}
+
+.form-label-big {
+    color: purple;
+    font-size: 1.25em;
+    font-weight: bold;
+
+    margin-bottom: 1em;
+}
+
+.form-label-placeholder {
+    color: #7f8184
+}
+
+.submit-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+}
+.submit-buttons button {
+    margin: 0;
+}
+
+.purchase-table thead {
+    color: white;
+    font-size: 1.2em;
+    background-color: purple;
+}
+
+@media screen and (max-width: 425px) {
+    form {
+        margin: 20% 10%;
+    }
+
+    .submit-buttons {
+        flex-direction: column;
+    }
+}
