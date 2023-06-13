@@ -1,12 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import BarraSecao from './barraSecao'
-// eslint-disable-next-line no-unused-vars
-import formularioCadastro from '../styles/components/formularioCadastro.css'
-// eslint-disable-next-line no-unused-vars
-import botoes from '../styles/botoes.css'
+import { useNavigate, useParams } from 'react-router-dom'
 
 export default function FormularioCadastroCliente(props) {
     const [secaoAtual, setSecaoAtual] = useState('Informações')
+
+    //TROCA DE ROTAS
+    const navigate = useNavigate()
 
     //LISTA DE RGS
     const [rgs, setRgs] = useState([{id: 1, rg:'', dataEmissao:''}])
@@ -140,9 +140,20 @@ export default function FormularioCadastroCliente(props) {
         setPets(novosPets)
     }
 
+
+    //REVISÃO E EDIÇÃO DE CLIENTES
+    const [editar, setEditar] = useState(false)
+    const {id} = useParams()
+
+    useEffect(() => {
+        if(id){
+            setEditar(true)
+        }
+    }, [id])
+
     return (
         <>
-        {props.editar &&
+        {editar &&
             <BarraSecao secaoAtual={secaoAtual} alterarSecao={setSecaoAtual} secoes={['Informações', 'Histórico de compras']}/>
         }
         
@@ -168,7 +179,7 @@ export default function FormularioCadastroCliente(props) {
                     {listarTelefones()}
                     <div className='form-label-big'>Pets</div>
                     {listarPets()}
-                    {props.editar ? 
+                    {editar ? 
                         <div className='submit-buttons'>
                             <button className="btn btn-primary btn-lg add-button" type="button">Editar</button>
                             <button className="btn btn-primary btn-lg remove-button" type="button" onClick={(e) => props.seletorView('Clientes', e)}>Excluir</button>
@@ -176,7 +187,7 @@ export default function FormularioCadastroCliente(props) {
                         : 
                         <div className='submit-buttons'>
                             <button className="btn btn-primary btn-lg add-button" type="button">Cadastrar</button>
-                            <button className="btn btn-primary btn-lg remove-button" type="button" onClick={(e) => props.seletorView('Clientes', e)}>Voltar</button>
+                            <button className="btn btn-primary btn-lg remove-button" type="button" onClick={(e) => navigate('/clientes')}>Voltar</button>
                         </div>
                     }
                 </form>
