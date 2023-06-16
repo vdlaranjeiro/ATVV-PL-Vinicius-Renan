@@ -1,9 +1,10 @@
-import Cliente from "../modelo/cliente";
-import Produto from "../modelo/produto";
-import Servico from "../modelo/servico";
-import RelacaoQuantidade from "./relacaoQuantidade";
+import { Request, Response } from "express"
+import Cliente from "../modelo/cliente"
+import Produto from "../modelo/produto"
+import Servico from "../modelo/servico"
+import RelacaoQuantidade from "../modelo/relacaoQuantidade"
 
-export default class RankingsSistema {
+export default class DadosConsumoController {
     private clientes: Cliente[]
     private produtos: Produto[]
     private servicos: Servico[]
@@ -14,72 +15,16 @@ export default class RankingsSistema {
         this.servicos = servicos
     }
 
-    public consumoQuantidade(){
-        let comprasCliente: RelacaoQuantidade[] = []
-
-        this.clientes.forEach(cliente => {
-            let produtos = cliente.getProdutosConsumidos.length
-            let servicos = cliente.getServicosConsumidos.length
-            let compraCliente = new RelacaoQuantidade(cliente.nome, (produtos + servicos))
-
-            comprasCliente.push(compraCliente)
-        })
-
-        let quantidadeOrdenada = comprasCliente.sort(
-            (a,b) => b.getQuantidade - a.getQuantidade
-        )
-        
-        console.log('\n')
-        console.log('Top 10 clientes que mais consumiram em quantidade')
-        let top10quantidade = quantidadeOrdenada.splice(0, 10)
-        top10quantidade.forEach((item, index) => {
-            console.log(`${index + 1} - ${item.getNome} | ${item.getQuantidade} compras`)
-        })
-    }
-
-    public consumoValor(){
-        let comprasCliente: RelacaoQuantidade[] = []
-
-        this.clientes.forEach(cliente => {
-            let produtosConsumidos = cliente.getProdutosConsumidos
-            let servicosConsumidos = cliente.getServicosConsumidos
-
-            let valorConsumido = 0
-            produtosConsumidos.forEach(produtoConsumido => {
-                let valorProduto = produtoConsumido.getPreco
-                valorConsumido+=valorProduto
-            })
-
-            servicosConsumidos.forEach(servicoConsumido => {
-                let valorServico = servicoConsumido.getPreco
-                valorConsumido+=valorServico
-            })
-
-            let compraValorCliente = new RelacaoQuantidade(cliente.nome, valorConsumido)
-            comprasCliente.push(compraValorCliente)
-        })
-
-        let quantidadeOrdenada = comprasCliente.sort(
-            (a,b) => b.getQuantidade - a.getQuantidade
-        )
-        
-        console.log('\n')
-        console.log('Top 5 clientes que mais consumiram em valor')
-        let top5quantidade = quantidadeOrdenada.splice(0, 5)
-        top5quantidade.forEach((item, index) => {
-            console.log(`${index + 1} - ${item.getNome} | R$${item.getQuantidade}`)
-        })
-    }
-
-    public listarMaiorDemanda() {
+    public listarMaiorDemanda(req: Request, res: Response){
         let comprasGeral: RelacaoQuantidade[] = []
 
+        //Iniciando a quantidade de todos os produtos/serviços em 0
         this.produtos.forEach(produto => {
-            let produtoCadastrado = new RelacaoQuantidade(produto.getNome, 0)
+            let produtoCadastrado = new RelacaoQuantidade(produto.getNome, 0, 'produto')
             comprasGeral.push(produtoCadastrado)
         })
         this.servicos.forEach(servico => {
-            let servicoCadastrado = new RelacaoQuantidade(servico.getNome, 0)
+            let servicoCadastrado = new RelacaoQuantidade(servico.getNome, 0, 'serviço')
             comprasGeral.push(servicoCadastrado)
         })
 
@@ -109,13 +54,59 @@ export default class RankingsSistema {
             (a,b) => b.getQuantidade - a.getQuantidade
         )
 
-        console.log('Lista de Produtos e Serviços mais consumidos');
-        comprasOrdenadas.forEach((prodOuServ, index) => {
-            console.log(`${index + 1} - ${prodOuServ.getNome} | ${prodOuServ.getQuantidade} compras`)
-        })
+        res.send(comprasOrdenadas)
     }
 
-    public consumoPorTipo(){
+    public consumoQuantidade(req: Request, res: Response){
+        let comprasCliente: RelacaoQuantidade[] = []
+
+        this.clientes.forEach(cliente => {
+            let produtos = cliente.getProdutosConsumidos.length
+            let servicos = cliente.getServicosConsumidos.length
+            let compraCliente = new RelacaoQuantidade(cliente.nome, (produtos + servicos))
+
+            comprasCliente.push(compraCliente)
+        })
+
+        let quantidadeOrdenada = comprasCliente.sort(
+            (a,b) => b.getQuantidade - a.getQuantidade
+        )
+        
+        let top10quantidade = quantidadeOrdenada.splice(0, 10)
+        res.send(top10quantidade)
+    }
+
+    public consumoValor(req: Request, res: Response){
+        let comprasCliente: RelacaoQuantidade[] = []
+
+        this.clientes.forEach(cliente => {
+            let produtosConsumidos = cliente.getProdutosConsumidos
+            let servicosConsumidos = cliente.getServicosConsumidos
+
+            let valorConsumido = 0
+            produtosConsumidos.forEach(produtoConsumido => {
+                let valorProduto = Number(produtoConsumido.getPreco)
+                valorConsumido+=valorProduto
+            })
+
+            servicosConsumidos.forEach(servicoConsumido => {
+                let valorServico = Number(servicoConsumido.getPreco)
+                valorConsumido+=valorServico
+            })
+
+            let compraValorCliente = new RelacaoQuantidade(cliente.nome, valorConsumido)
+            comprasCliente.push(compraValorCliente)
+        })
+
+        let quantidadeOrdenada = comprasCliente.sort(
+            (a,b) => b.getQuantidade - a.getQuantidade
+        )
+        
+        let top10quantidade = quantidadeOrdenada.splice(0, 10)
+        res.send(top10quantidade)
+    }
+
+    public consumoPorTipo(req: Request, res: Response){
         let listaTipos: string[] = []
 
         this.clientes.forEach(cliente => {
@@ -127,7 +118,7 @@ export default class RankingsSistema {
             })
         })
 
-        console.log('\nServiços mais consumidos por tipo de pet')
+        let listaConsumoPorTipo: { tipo: string; lista: RelacaoQuantidade[] }[] = []
         listaTipos.forEach(tipo => {
         
             let servicosTipo: RelacaoQuantidade[] = []
@@ -156,16 +147,18 @@ export default class RankingsSistema {
                 (a,b) => b.getQuantidade - a.getQuantidade
             )
             
-            
-            console.log(`Tipo - ${tipo}`)
-            servicosTipoOrdenados.forEach((servico, index) => {
-                console.log(`${index + 1} - ${servico.getNome} | ${servico.getQuantidade} compras`)
-            })
-            console.log('\n')
+            let listaConsumoTipo = {
+                tipo: tipo,
+                lista: servicosTipoOrdenados
+            }
+
+            listaConsumoPorTipo.push(listaConsumoTipo)
         })
+        
+        res.send(listaConsumoPorTipo)
     }
 
-    public consumoPorRaca(){
+    public consumoPorRaca(req: Request, res: Response){
         let listaTipos: string[] = []
 
         this.clientes.forEach(cliente => {
@@ -177,6 +170,7 @@ export default class RankingsSistema {
             })
         })
 
+        let listaConsumoPorRaca: { tipo: string; raca: string; lista: RelacaoQuantidade[] }[] = []
         listaTipos.forEach(tipo => {
             
             let listaRacas: string[] = []
@@ -190,7 +184,6 @@ export default class RankingsSistema {
                 })
             })
 
-            console.log('\nServiços mais consumidos por raça de pet')
             listaRacas.forEach(raca => {
                 let servicosRaca: RelacaoQuantidade[] = []
 
@@ -215,14 +208,18 @@ export default class RankingsSistema {
                 let servicosRacaOrdenados = servicosRaca.sort(
                     (a, b) => b.getQuantidade - a.getQuantidade
                 )
-
                 
-                console.log(`Tipo - ${tipo} | Raça - ${raca}`)
-                servicosRacaOrdenados.forEach((servico, index) => {
-                    console.log(`${index + 1} - ${servico.getNome} | ${servico.getQuantidade} compras`)
-                })
-                console.log('\n')
+                let listaConsumoRaca = {
+                    tipo: tipo,
+                    raca: raca,
+                    lista: servicosRacaOrdenados
+                }
+                
+                listaConsumoPorRaca.push(listaConsumoRaca)
+                
             })
         })
+
+        res.send(listaConsumoPorRaca)
     }
 }

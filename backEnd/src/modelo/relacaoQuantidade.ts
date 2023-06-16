@@ -1,10 +1,12 @@
 export default class RelacaoQuantidade {
     private nome: string
     private quantidade: number
+    private tipo?: string
 
-    constructor(nome: string, quantidade: number){
+    constructor(nome: string, quantidade: number, tipo?: string){
         this.nome = nome
         this.quantidade = quantidade
+        this.tipo = tipo
     }
 
     public get getNome(){

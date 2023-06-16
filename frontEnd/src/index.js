@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
-import Roteador from './components/roteador';
-import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 //IMPORT DE COMPONENETES
 import App from './components/App';

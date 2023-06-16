@@ -32,4 +32,7 @@ export default class Produto {
     public get getData(){
         return this.dataConsumo
     }
+    public set setData(data: Date){
+        this.dataConsumo = data
+    }
 }
