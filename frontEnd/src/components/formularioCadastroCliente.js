@@ -219,10 +219,14 @@ export default function FormularioCadastroCliente(props) {
     }
 
     const removerPet = (id) => {
-        if(pets.length > 1){
-            const novosPets = pets.filter(pet => pet.id !== id)
-            setPets(novosPets)
-        }  
+        const pet = pets.find(pet => pet.id === id)
+        const confirmacao = window.confirm(`Deseja realmente excluir o/a ${pet.nome}? :(`)
+        if(confirmacao){
+            if(pets.length > 1){
+                const novosPets = pets.filter(pet => pet.id !== id)
+                setPets(novosPets)
+            }  
+        }
     }
 
     const handleNomePet = (evento, index, alteracao) => {
@@ -231,13 +235,18 @@ export default function FormularioCadastroCliente(props) {
         setPets(novosPets)
     }
     const handleTipoPet = (evento, index) => {
+        const tipoPet = evento.target.value.charAt(0).toUpperCase() + evento.target.value.slice(1)
+
         const novosPets = [...pets]
-        novosPets[index] = {...novosPets[index], tipo: evento.target.value}
+        novosPets[index] = {...novosPets[index], tipo: tipoPet}
         setPets(novosPets)
     }
     const handleRacaPet = (evento, index) => {
+        const racaPet = evento.target.value.charAt(0).toUpperCase() + evento.target.value.slice(1)
+
+
         const novosPets = [...pets]
-        novosPets[index] = {...novosPets[index], raca: evento.target.value}
+        novosPets[index] = {...novosPets[index], raca: racaPet}
         setPets(novosPets)
     }
     const handleGeneroPet = (evento, index) => {
@@ -248,6 +257,7 @@ export default function FormularioCadastroCliente(props) {
 
     //ENVIO DO FORMULÁRIO
     const validaForm = () => {
+        console.log(pets)
         if(cpfsExistente.some(cpfsExistente => cpfsExistente === cpf.valor)){
             window.alert('CPF já cadastrado')
             return false
@@ -259,6 +269,9 @@ export default function FormularioCadastroCliente(props) {
             return false
         } else if(telefones.some(telefone => telefone.numero.length < 8)){
             window.alert('Telefone incompleto!')
+            return false
+        } else if(pets.some(pet => pet.genero !== 'M' && pet.genero !== 'F')) {
+            window.alert('Selecione o gênero do seu pet')
             return false
         } else {
             return true
@@ -435,6 +448,7 @@ export default function FormularioCadastroCliente(props) {
         {secaoAtual === 'Histórico de compras' &&
             <div className='container-fluid'>
                 <form>
+                    {compras.length < 1 && <div className='form-label-big'>Ainda não há compras registradas</div>}
                     <div className="table-responsive">
                         <table className="table table-striped purchase-table">
                             <thead>

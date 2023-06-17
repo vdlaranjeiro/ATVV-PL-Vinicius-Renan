@@ -18,8 +18,9 @@ export default class ServicoController {
 
             let codigo:number = 1
             if(this.servicos.length > 0){
-                let codigoReferencia = this.servicos[this.servicos.length - 1].getCodigo
-                codigo = codigoReferencia + 1
+                let codigosExistentes = this.servicos.map(servico => servico.getCodigo)
+                let maiorCodigoExistente = Math.max(...codigosExistentes)
+                codigo = maiorCodigoExistente + 1
             }
 
             let servico = new Servico(codigo, dados.nome, dados.preco)

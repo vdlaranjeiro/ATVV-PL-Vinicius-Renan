@@ -18,8 +18,9 @@ export default class ProdutoController {
 
             let codigo:number = 1
             if(this.produtos.length > 0){
-                let codigoReferencia = this.produtos[this.produtos.length - 1].getCodigo
-                codigo = codigoReferencia + 1
+                let codigosExistentes = this.produtos.map(produto => produto.getCodigo)
+                let maiorCodigoExistente = Math.max(...codigosExistentes)
+                codigo = maiorCodigoExistente + 1
             }
 
             let produto = new Produto(codigo, dados.nome, dados.preco)
